@@ -1,7 +1,7 @@
 #Internal package file, do not edit.
-#Mon Jul 02 15:53:06 KST 2018
+#Mon Jun 08 19:51:35 KST 2020
 0.baseType=DIRECTORY
-0.base=C\:\\Users\\IGSksh\\Documents\\GitHub\\AndroidTelnet-master\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+0.base=C\:\\git\\AndroidTelnet-master\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 0.path=classes.dex
 0.set=DEX
 count=1

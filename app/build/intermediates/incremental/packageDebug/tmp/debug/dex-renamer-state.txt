@@ -1,4 +1,4 @@
-#Mon Jul 02 15:53:06 KST 2018
-base.0=C\:\\Users\\IGSksh\\Documents\\GitHub\\AndroidTelnet-master\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+#Mon Jun 08 19:51:34 KST 2020
+base.0=C\:\\git\\AndroidTelnet-master\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 path.0=classes.dex
 renamed.0=classes.dex

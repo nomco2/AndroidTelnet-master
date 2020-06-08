@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidTelnet-master.iml" filepath="$PROJECT_DIR$/AndroidTelnet-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidTelnet-master.iml" filepath="$PROJECT_DIR$/AndroidTelnet-master.iml" group="AndroidTelnet-master" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="AndroidTelnet-master/app" />
     </modules>
   </component>
 </project>

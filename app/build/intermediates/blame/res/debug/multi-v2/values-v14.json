@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\IGSksh\\Documents\\GitHub\\AndroidTelnet-master\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v14\\values-v14.xml",
+            "outputFile": "C:\\git\\AndroidTelnet-master\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v14\\values-v14.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\IGSksh\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-23.0.0.aar\\3ab697b54be501e774060620f75e6298\\res\\values-v14\\values-v14.xml",
+                    "source": "C:\\Users\\Kim\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-23.0.0.aar\\c3f8ce33e92cadad48ccf114178eb5f3\\res\\values-v14\\values-v14.xml",
                     "from": {
                         "startLines": "4,11,12,13,19,27,28,29,32,33",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
