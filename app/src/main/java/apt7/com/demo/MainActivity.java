@@ -1,16 +1,10 @@
 package apt7.com.demo;
 
-        import android.Manifest;
         import android.app.AlertDialog;
-        import android.app.ProgressDialog;
         import android.content.DialogInterface;
         import android.content.Intent;
-        import android.content.pm.PackageManager;
         import android.os.Bundle;
         import android.os.Handler;
-        import android.support.v4.app.ActivityCompat;
-        import android.support.v4.content.ContextCompat;
-        import android.support.v7.app.ActionBarActivity;
         import android.view.KeyEvent;
         import android.view.Menu;
         import android.view.MenuItem;
@@ -24,8 +18,10 @@ package apt7.com.demo;
 
         import com.koushikdutta.ion.Ion;
 
+        import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends ActionBarActivity {
+
+public class MainActivity extends AppCompatActivity {
 //    static EditText editText1;
 //    static EditText editText2;
 //    Button button;
