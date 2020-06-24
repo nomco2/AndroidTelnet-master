@@ -1,4 +1,4 @@
-#Wed Jun 24 13:16:27 KST 2020
+#Thu Jun 25 02:01:25 KST 2020
 base.0=C\:\\git\\AndroidTelnet-master\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

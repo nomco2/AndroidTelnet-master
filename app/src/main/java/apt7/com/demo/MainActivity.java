@@ -1,24 +1,39 @@
 package apt7.com.demo;
 
-        import android.app.AlertDialog;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.os.Handler;
-        import android.view.KeyEvent;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.inputmethod.EditorInfo;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.ImageButton;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Ion;
 
-        import androidx.appcompat.app.AppCompatActivity;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,21 +45,105 @@ public class MainActivity extends AppCompatActivity {
 //    TelnetServer telnet;
 //    public Handler mHandler;
 
-     EditText editText1;
-     EditText editText2;
+    EditText editText1;
+    EditText editText2;
     Button button;
-     ServerPref serverPref;
-     Utils utils;
+    ServerPref serverPref;
+    Utils utils;
     TelnetServer telnet;
     public Handler mHandler;
-    private boolean isOpenPermission=false;
+    private boolean isOpenPermission = false;
     private RequestPermission _requestPermission;
+
+    class wifi_data {
+        public String ssid;
+        public int rssi;
+
+        wifi_data(String ssid, int rssi) {
+            this.ssid = ssid;
+            this.rssi = rssi;
+        }
+    }
+
+    class MyAdapter extends BaseAdapter {
+
+        Context mContext = null;
+        LayoutInflater mLayoutInflater = null;
+        ArrayList<wifi_data> sample;
+
+        public MyAdapter(Context context, ArrayList<wifi_data> data) {
+            mContext = context;
+            sample = data;
+            mLayoutInflater = LayoutInflater.from(mContext);
+        }
+
+        @Override
+        public int getCount() {
+            return sample.size();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public wifi_data getItem(int position) {
+            return sample.get(position);
+        }
+
+        @Override
+        public View getView(int position, View converView, ViewGroup parent) {
+            View view = mLayoutInflater.inflate(R.layout.listview_item, null);
+
+            ImageView imageView = (ImageView) view.findViewById(R.id.poster);
+            TextView movieName = (TextView) view.findViewById(R.id.movieName);
+            TextView grade = (TextView) view.findViewById(R.id.grade);
+            movieName.setText(getItem(position).ssid);
+
+//            imageView.setImageResource(sample.get(position).getPoster());
+//            movieName.setText(sample.get(position).getMovieName());
+//            grade.setText(sample.get(position).getGrade());
+
+            return view;
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String test_string = "[{'ssid':'homewifi','rssi':-67},{'ssid':'homewifi1','rssi':-100},{'ssid':'homewifi2','rssi':-150},{'ssid':'homewifi3','rssi':-200}]";
+
+        ArrayList<wifi_data> wifi = new ArrayList<>();
+        try {
+            JSONArray arr = new JSONArray(test_string);
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject user = arr.getJSONObject(i);
+
+                wifi.add(new wifi_data(user.get("ssid").toString(), Integer.parseInt(user.get("rssi").toString())));
+                Log.i("parsing : ", wifi.get(i).ssid);
+            }
+        } catch (Exception e) {
+
+
+        }
+
+
+        ListView listView = (ListView) findViewById(R.id.listview1);
+        final MyAdapter myAdapter = new MyAdapter(this, wifi);
+
+        listView.setAdapter(myAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                Toast.makeText(getApplicationContext(), myAdapter.getItem(position).ssid, Toast.LENGTH_LONG).show();
+                password_request_dialog(myAdapter.getItem(position).ssid);
+            }
+        });
 
 
         findViewById(R.id.id5).setVisibility(View.GONE);
@@ -67,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 editText1.setText("");
                 connect();
-                Toast.makeText(getApplicationContext(),telnet+"",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), telnet + "", Toast.LENGTH_LONG).show();
                 findViewById(R.id.button2).setEnabled(true);
             }
         });
@@ -79,13 +178,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-
     }
-
-
-
 
 
     private void connect() {
@@ -185,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 //            if (!telnet.isAlive())
-                startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
 //            else
 //                Toast.makeText(this, "Please disconnect connection to go to setting.", Toast.LENGTH_SHORT).show();
         }
@@ -234,8 +327,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     public void hideOrShow(String msg) {
         if (msg == null) {
             findViewById(R.id.id5).setVisibility(View.GONE);
@@ -250,13 +341,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(telnet != null)
+        if (telnet != null)
             telnet.disconnect();
     }
 
 
+    String password;
+    void password_request_dialog(String ssid) {
 
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        alertDialog.setTitle(ssid + "wifi의 비밀번호를 넣어주세요.");
+        alertDialog.setMessage("Enter Password");
 
+        final EditText input = new EditText(MainActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        alertDialog.setIcon(R.drawable.key);
+
+        alertDialog.setPositiveButton("확인",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        password = input.getText().toString();
+                        Toast.makeText(getApplicationContext(), password,Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+        alertDialog.setNegativeButton("취소",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
 
 
 }
+
+

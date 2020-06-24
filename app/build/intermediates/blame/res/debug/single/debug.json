@@ -30,5 +30,13 @@
     {
         "merged": "C:\\git\\AndroidTelnet-master\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_settings.xml.flat",
         "source": "C:\\git\\AndroidTelnet-master\\app\\src\\main\\res\\layout\\activity_settings.xml"
+    },
+    {
+        "merged": "C:\\git\\AndroidTelnet-master\\app\\build\\intermediates\\res\\merged\\debug\\drawable_key.png.flat",
+        "source": "C:\\git\\AndroidTelnet-master\\app\\src\\main\\res\\drawable\\key.png"
+    },
+    {
+        "merged": "C:\\git\\AndroidTelnet-master\\app\\build\\intermediates\\res\\merged\\debug\\layout_listview_item.xml.flat",
+        "source": "C:\\git\\AndroidTelnet-master\\app\\src\\main\\res\\layout\\listview_item.xml"
     }
 ]
