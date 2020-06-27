@@ -114,6 +114,7 @@ public class TelnetServer extends Thread implements Runnable {
             public void run() {
                 String lastLine = mainActivity.editText1.getText().toString();
                 mainActivity.editText1.setText(lastLine + "\n" + msg);
+                mainActivity.listview_init(msg.substring(0,msg.length()-2) );
                 Log.i("msg @@ ", msg);
             }
         });

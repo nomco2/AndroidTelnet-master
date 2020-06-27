@@ -37,13 +37,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MainActivity extends AppCompatActivity {
-//    static EditText editText1;
-//    static EditText editText2;
-//    Button button;
-//    static ServerPref serverPref;
-//    static Utils utils;
-//    TelnetServer telnet;
-//    public Handler mHandler;
 
     EditText editText1;
     EditText editText2;
@@ -100,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             TextView movieName = (TextView) view.findViewById(R.id.movieName);
             TextView grade = (TextView) view.findViewById(R.id.grade);
             movieName.setText(getItem(position).ssid);
+            grade.setText(getItem(position).rssi + "");
 
 //            imageView.setImageResource(sample.get(position).getPoster());
 //            movieName.setText(sample.get(position).getMovieName());
@@ -115,35 +109,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String test_string = "[{'ssid':'homewifi','rssi':-67},{'ssid':'homewifi1','rssi':-100},{'ssid':'homewifi2','rssi':-150},{'ssid':'homewifi3','rssi':-200}]";
-
-        ArrayList<wifi_data> wifi = new ArrayList<>();
-        try {
-            JSONArray arr = new JSONArray(test_string);
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject user = arr.getJSONObject(i);
-
-                wifi.add(new wifi_data(user.get("ssid").toString(), Integer.parseInt(user.get("rssi").toString())));
-                Log.i("parsing : ", wifi.get(i).ssid);
-            }
-        } catch (Exception e) {
 
 
-        }
 
 
-        ListView listView = (ListView) findViewById(R.id.listview1);
-        final MyAdapter myAdapter = new MyAdapter(this, wifi);
-
-        listView.setAdapter(myAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView parent, View v, int position, long id) {
-                Toast.makeText(getApplicationContext(), myAdapter.getItem(position).ssid, Toast.LENGTH_LONG).show();
-                password_request_dialog(myAdapter.getItem(position).ssid);
-            }
-        });
 
 
         findViewById(R.id.id5).setVisibility(View.GONE);
@@ -178,6 +147,39 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }//oncreate 끝
+
+    public void listview_init(String test_string){
+
+//        String test_string = "[{'ssid':'homewifi','rssi':-67},{'ssid':'homewifi1','rssi':-100},{'ssid':'homewifi2','rssi':-150},{'ssid':'homewifi3','rssi':-200}]";
+
+        ArrayList<wifi_data> wifi = new ArrayList<>();
+        try {
+            JSONArray arr = new JSONArray(String.valueOf(test_string));
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject user = arr.getJSONObject(i);
+
+                wifi.add(new wifi_data(user.get("ssid").toString(), Integer.parseInt(user.get("rssi").toString())));
+                Log.i("parsing : ", wifi.get(i).ssid);
+            }
+        } catch (Exception e) {
+            Log.e("parsing : ", e.toString());
+
+        }
+
+
+        ListView listView = (ListView) findViewById(R.id.listview1);
+        final MyAdapter myAdapter = new MyAdapter(this, wifi);
+
+        listView.setAdapter(myAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                Toast.makeText(getApplicationContext(), myAdapter.getItem(position).ssid, Toast.LENGTH_LONG).show();
+                password_request_dialog(myAdapter.getItem(position).ssid);
+            }
+        });
     }
 
 
@@ -289,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
     public void send() {
 
 
-        NetworkThread thread = new NetworkThread();
+        NetworkThread thread = new NetworkThread(editText2.getText().toString());
         thread.start();
         thread.interrupt();
 
@@ -300,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                 editText1.setText("");
                 editText1.setText(lastLine + "\n>" + editText2.getText().toString());
 
-                editText2.setText("");
+//                editText2.setText("");
                 if (editText2.getText().toString().toLowerCase().equals("quit")) {
                     lastLine = editText1.getText().toString();
                     editText1.setText(lastLine + "\n" + "Disconnection from Server");
@@ -309,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 //    Thread temporary_thread = new Thread() {
 //        public void run() {
@@ -319,11 +322,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private class NetworkThread extends Thread {
+        String send_data;
+        NetworkThread(String send_data){
+            this.send_data = send_data;
+        }
 
         public void run() {
-            telnet.out.println(editText2.getText().toString());
+//            telnet.out.println(editText2.getText().toString());
+            telnet.out.println(this.send_data);
             telnet.out.flush();
         }
+
     }
 
 
@@ -346,29 +355,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //비밀번호 받는 dialog
     String password;
-    void password_request_dialog(String ssid) {
+    void password_request_dialog(final String ssid) {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
         alertDialog.setTitle(ssid + "wifi의 비밀번호를 넣어주세요.");
         alertDialog.setMessage("Enter Password");
 
-        final EditText input = new EditText(MainActivity.this);
+        final EditText password = new EditText(MainActivity.this);
+
+
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        alertDialog.setView(input);
+        password.setLayoutParams(lp);
+        alertDialog.setView(password);
         alertDialog.setIcon(R.drawable.key);
 
         alertDialog.setPositiveButton("확인",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        password = input.getText().toString();
-                        Toast.makeText(getApplicationContext(), password,Toast.LENGTH_SHORT).show();
+                        MainActivity.this.password = password.getText().toString();
+                        Toast.makeText(getApplicationContext(), MainActivity.this.password,Toast.LENGTH_SHORT).show();
+
+
+//                        NetworkThread thread = new NetworkThread("{'device_id':'test','ssid':'I-GEOSCAN','pw':'zzzzzzzz','server':'192.168.0.1','port':'3000'}");
+                        NetworkThread thread = new NetworkThread("{'device_id':'0','ssid':' + " + ssid + "','pw':'"+ MainActivity.this.password +  "','server':'192.168.0.1','port':'3000'}");
+
+                        thread.start();
+                        thread.interrupt();
 
                     }
                 });
+
 
         alertDialog.setNegativeButton("취소",
                 new DialogInterface.OnClickListener() {
